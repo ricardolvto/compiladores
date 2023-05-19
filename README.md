@@ -1,2 +1,2 @@
 # compiladores
-reposit
+repositorio utilizado para os trabalhos de compiladores
