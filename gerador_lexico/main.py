@@ -2,54 +2,57 @@ import sys
 from antlr4 import *
 from gramatica2 import gramatica2
 
-# Verifique se foi fornecido o nome do arquivo como argumento
+# Verificando se todos os argumentos necessarios foram passados
 if len(sys.argv) < 3:
     print("É necessário fornecer o nome dos arquivos de entrada e saida como argumento.")
     sys.exit(1)
 
-# Obtém o nome do arquivo a partir dos argumentos
+# Os argumentos representam os arquivos de entrada e saida respectivamente 
 input_file_name = sys.argv[1]
 output_file_name = sys.argv[2]
 
 try:
-    # Crie um objeto FileStream com o arquivo de entrada
+    # Criando um InputStream atraves do arquivo de entrada
     input_stream = FileStream(input_file_name, encoding='utf-8')
 
-    # Inicialize o analisador léxico com o input stream
+    # Utilizando o lexer criado com o ANTLR
     lexer = gramatica2(input_stream)
-
-    # Obtenha o próximo token
     token = lexer.nextToken()
 
+    # Listando os tipos definidos para facilitar
     tipos_definidos = ['IDENT', 'CADEIA', 'NUM_INT', 'NUM_REAL']
 
     output = open(output_file_name, 'w')
 
-    # Itere sobre os tokens até encontrar o fim do arquivo
     while token.type != Token.EOF:
 
+        # Aplicando a formatacao padrao para as palavras chave
         txt = '\'' + token.text + '\''
+        
+        # Identificando o tipo do token
         typeStr = gramatica2.symbolicNames[token.type]
+
+        # Por fim definindo o outout, e se houve erro ou nao
         if (typeStr == 'Nao_fechado'):
-            output.writelines('Linha ' + token.line + ': comentario nao fechado\n')
+            output.write('Linha ' + token.line + ': comentario nao fechado\n')
             break
 
         elif (typeStr == 'Literal_Nao_Fechada'):
-            output.writelines('Linha ' + token.line + ': cadeia literal nao fechada\n')
+            output.write('Linha ' + token.line + ': cadeia literal nao fechada\n')
             break
 
         elif(typeStr == 'ERR'):
-            output.writelines('Linha ' + token.line + ': ' + token.text + ' - simbolo nao identificado\n')
+            output.write('Linha ' + token.line + ': ' + token.text + ' - simbolo nao identificado\n')
             break
 
         else:    
             if (typeStr in tipos_definidos):
-                output.writelines('<'+ txt + "," + typeStr + '>\n')
+                output.write('<'+ txt + "," + typeStr + '>\n')
             else:
-                output.writelines('<' + txt + ',' + txt + '>\n')
+                output.write('<' + txt + ',' + txt + '>\n')
             
-        # Obtenha o próximo token
         token = lexer.nextToken()
 
+# Caso nao seja possivel abrir o arquivo de entrada
 except IOError:
     print("Erro ao abrir o arquivo:", input_file_name)
