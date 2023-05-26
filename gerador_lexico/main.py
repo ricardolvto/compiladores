@@ -1,3 +1,10 @@
+'''
+    Autores:
+    Ivan Duarte Calvo RA: 790739
+    João Ricardo Lopes Lovato RA: 772138
+    Vinícius Borges de Lima RA: 795316
+'''
+
 import sys
 from antlr4 import *
 from gramatica2 import gramatica2
